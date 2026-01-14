@@ -1,0 +1,16 @@
+{
+  "name": "@ovenir/seo",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/schemas.ts",
+      "import": "./src/schemas.ts"
+    }
+  },
+  "scripts": {
+    "lint": "echo 'lint skipped'",
+    "test": "echo 'no tests yet'"
+  }
+}

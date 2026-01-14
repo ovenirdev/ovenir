@@ -1,0 +1,133 @@
+---
+id: base64
+title: Base64 Encoder & Decoder
+description: Encode and decode Base64 strings instantly in your browser. Free, private, no data sent to servers. Supports Unicode (UTF-8).
+category: encoding
+tags:
+  - base64
+  - encode
+  - decode
+  - binary
+  - text
+  - converter
+keywords:
+  - base64 encoder
+  - base64 decoder
+  - base64 online
+  - encode base64
+  - decode base64
+  - base64 converter
+  - base64 utf8
+ogImage: /og/tools/base64.png
+---
+
+# Base64 Encoder & Decoder
+
+Encode text to Base64 or decode Base64 to text — instantly, privately, in your browser.
+
+## What is Base64?
+
+Base64 is a binary-to-text encoding scheme that represents binary data as ASCII characters. It's commonly used to:
+
+- Embed images in HTML/CSS (data URIs)
+- Encode attachments in emails (MIME)
+- Store binary data in JSON or XML
+- Transmit data over text-only protocols
+
+## How to use
+
+1. **Select mode**: Choose "Encode" or "Decode"
+2. **Paste your input**: Enter text (for encoding) or Base64 string (for decoding)
+3. **Get instant result**: Output appears immediately — no server needed
+
+## Examples
+
+### Encode text to Base64
+
+**Input:**
+```
+Hello, World!
+```
+
+**Output:**
+```
+SGVsbG8sIFdvcmxkIQ==
+```
+
+### Decode Base64 to text
+
+**Input:**
+```
+SGVsbG8sIFdvcmxkIQ==
+```
+
+**Output:**
+```
+Hello, World!
+```
+
+### Unicode support (UTF-8)
+
+OVENIR handles Unicode correctly, including accented characters, emojis, and CJK scripts.
+
+**Input (Japanese):**
+```
+こんにちは
+```
+
+**Output:**
+```
+44GT44KT44Gr44Gh44Gv
+```
+
+## Privacy & Security
+
+- ✅ **100% client-side** — Your data never leaves your browser
+- ✅ **No tracking** — We don't log or store your inputs
+- ✅ **Works offline** — Use it without internet after first load
+- ✅ **Open source** — [View the code](https://github.com/ovenirdev/ovenir)
+
+## Technical details
+
+| Property | Value |
+|----------|-------|
+| Encoding | Standard Base64 (RFC 4648) |
+| Character set | A-Z, a-z, 0-9, +, / |
+| Padding | = (standard) |
+| Unicode handling | UTF-8 encoding before Base64 |
+
+## Common use cases
+
+- **Web developers**: Embed images as data URIs
+- **API developers**: Encode binary payloads for JSON APIs
+- **DevOps**: Decode secrets from Kubernetes configs
+- **Email troubleshooting**: Decode MIME attachments
+
+## Limitations
+
+- Large files (>10MB) may slow down your browser
+- This tool uses standard Base64, not URL-safe Base64 (use URL Encode for that)
+
+## Related tools
+
+- [URL Encoder/Decoder](/tools/url-encode) — Encode special characters for URLs
+- [JWT Decoder](/tools/jwt-decode) — Decode and inspect JSON Web Tokens
+- [Hash Generator](/tools/hash) — Generate MD5, SHA-1, SHA-256 hashes
+
+## FAQ
+
+### Is my data safe?
+
+Yes. Everything runs in your browser. We never see your data.
+
+### Does it work offline?
+
+Yes. After the first visit, you can use OVENIR without internet.
+
+### Why does my Base64 look different from other tools?
+
+If you're encoding non-ASCII text (like emojis or Japanese), some tools handle Unicode differently. OVENIR uses UTF-8 encoding before Base64, which is the standard approach.
+
+### What's the maximum input size?
+
+There's no hard limit, but your browser may slow down with very large inputs (>10MB).
