@@ -4,53 +4,46 @@ import { scanForSecrets } from './detector';
 describe('scanForSecrets', () => {
   it('detects AWS access key', () => {
     const result = scanForSecrets('My key is AKIAIOSFODNN7EXAMPLE');
-    expect(result.hasSecrets).toBe(true);
-    expect(result.secrets[0].pattern.id).toBe('aws-access-key');
+    expect(result.secrets.length).toBeGreaterThan(0);
+    expect(result.secrets[0]?.type).toBe('AWS Access Key');
   });
 
   it('detects GitHub PAT', () => {
-    const result = scanForSecrets('token: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-    expect(result.hasSecrets).toBe(true);
-    expect(result.secrets[0].pattern.id).toBe('github-pat');
+    const result = scanForSecrets('token: ghp_1234567890abcdefghijklmnopqrstuvwxyz');
+    expect(result.secrets.length).toBeGreaterThan(0);
+    expect(result.secrets[0]?.type).toBe('GitHub PAT');
   });
 
   it('detects JWT', () => {
-    const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U';
-    const result = scanForSecrets(jwt);
-    expect(result.hasSecrets).toBe(true);
-    expect(result.secrets[0].pattern.id).toBe('jwt');
+    const result = scanForSecrets('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U');
+    expect(result.secrets.length).toBeGreaterThan(0);
+    expect(result.secrets[0]?.type).toBe('JWT');
   });
 
-  it('detects private key header', () => {
-    const result = scanForSecrets('-----BEGIN RSA PRIVATE KEY-----\nMIIE...');
-    expect(result.hasSecrets).toBe(true);
-    expect(result.secrets[0].pattern.id).toBe('private-key-rsa');
+  it('detects private key', () => {
+    const result = scanForSecrets('-----BEGIN RSA PRIVATE KEY-----\nMIIE...\n-----END RSA PRIVATE KEY-----');
+    expect(result.secrets.length).toBeGreaterThan(0);
+    expect(result.secrets[0]?.type).toBe('RSA Private Key');
   });
 
   it('detects multiple secrets', () => {
-    const text = `
-      AWS_KEY=AKIAIOSFODNN7EXAMPLE
-      GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    `;
-    const result = scanForSecrets(text);
-    expect(result.secrets.length).toBeGreaterThanOrEqual(2);
+    const result = scanForSecrets('AKIAIOSFODNN7EXAMPLE and ghp_1234567890abcdefghijklmnopqrstuvwxyz');
+    expect(result.secrets.length).toBe(2);
   });
 
   it('returns empty for clean text', () => {
-    const result = scanForSecrets('Hello, this is just normal text.');
-    expect(result.hasSecrets).toBe(false);
-    expect(result.secrets).toHaveLength(0);
+    const result = scanForSecrets('Hello world, this is safe text');
+    expect(result.secrets.length).toBe(0);
+    expect(result.hasCritical).toBe(false);
   });
 
-  it('respects minSeverity filter', () => {
+  it('respects minSeverity option', () => {
     const result = scanForSecrets('email@example.com', { minSeverity: 'high' });
-    expect(result.hasSecrets).toBe(false); // email is 'low' severity
+    expect(result.secrets.length).toBe(0);
   });
 
-  it('respects ignorePatterns', () => {
-    const result = scanForSecrets('AKIAIOSFODNN7EXAMPLE', {
-      ignorePatterns: ['aws-access-key'],
-    });
-    expect(result.secrets.filter(s => s.pattern.id === 'aws-access-key')).toHaveLength(0);
+  it('respects ignorePatterns option', () => {
+    const result = scanForSecrets('AKIAIOSFODNN7EXAMPLE', { ignorePatterns: ['aws-access-key'] });
+    expect(result.secrets.length).toBe(0);
   });
 });
