@@ -1,0 +1,25 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd ~/apps/ovenir
+            git pull origin main
+            docker build -t ovenir-web .
+            docker stop ovenir-web || true
+            docker rm ovenir-web || true
+            docker run -d --name ovenir-web -p 3000:3000 --restart unless-stopped ovenir-web
+            docker image prune -f
