@@ -23,7 +23,7 @@ describe('scanForSecrets', () => {
   it('detects private key', () => {
     const result = scanForSecrets('-----BEGIN RSA PRIVATE KEY-----\nMIIE...\n-----END RSA PRIVATE KEY-----');
     expect(result.secrets.length).toBeGreaterThan(0);
-    expect(result.secrets[0]?.pattern.id).toBe('rsa-private-key');
+    expect(result.secrets[0]?.pattern.id).toBe('private-key-rsa');
   });
 
   it('detects multiple secrets', () => {
