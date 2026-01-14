@@ -1,0 +1,31 @@
+{
+  "name": "ovenir",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Developer tools. Local. Private. Fast.",
+  "author": "OVENIR Contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ovenirdev/ovenir.git"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "rm -rf node_modules .turbo && pnpm -r exec rm -rf node_modules dist .turbo"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "turbo": "^2.1.0",
+    "typescript": "^5.4.5"
+  },
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  }
+}

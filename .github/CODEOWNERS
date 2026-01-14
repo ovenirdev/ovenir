@@ -1,0 +1,10 @@
+# Default owners for everything
+* @Ovenir
+
+# Core packages need extra review
+/packages/core/ @Ovenir
+/packages/tools/ @Ovenir
+
+# Security-sensitive files
+SECURITY.md @Ovenir
+.github/workflows/ @Ovenir

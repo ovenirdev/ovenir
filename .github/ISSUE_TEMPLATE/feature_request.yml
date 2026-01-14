@@ -1,0 +1,46 @@
+name: 💡 Feature Request
+description: Suggest a new feature or improvement
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: What problem does this feature solve?
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should this feature work?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any alternative solutions you've thought about?
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - New tool
+        - New flow
+        - UI/UX improvement
+        - Performance
+        - Accessibility
+        - Documentation
+        - Other
+    validations:
+      required: true

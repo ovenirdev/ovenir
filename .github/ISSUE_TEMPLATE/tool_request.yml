@@ -1,0 +1,59 @@
+name: 🔧 Tool Request
+description: Request a new developer tool
+labels: ["tool-request", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest a new tool for OVENIR!
+
+  - type: input
+    id: name
+    attributes:
+      label: Tool name
+      placeholder: e.g., JWT Decoder, Base64 Encoder
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Encoding/Decoding
+        - Crypto/Hashing
+        - JSON/Data
+        - Text/String
+        - Time/Date
+        - Network/Web
+        - Dev Utils
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What does this tool do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: input-output
+    attributes:
+      label: Input / Output example
+      description: Show an example of input and expected output
+      placeholder: |
+        Input: eyJhbGciOiJIUzI1NiIs...
+        Output: { "alg": "HS256", ... }
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: This tool can run 100% client-side (no server required)
+          required: true
