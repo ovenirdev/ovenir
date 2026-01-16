@@ -48,7 +48,7 @@ const PALETTE_TYPES: { id: PaletteType; name: string }[] = [
   { id: 'monochromatic', name: 'Mono' },
 ];
 
-export function ColorTool({ slug, initialInput, initialMode }: ColorToolProps) {
+export function ColorTool({ initialInput, initialMode }: ColorToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'convert');
   const [colorInput, setColorInput] = useState(initialInput || '');
   const [paletteType, setPaletteType] = useState<PaletteType>('complementary');

@@ -20,7 +20,7 @@ interface PasswordToolProps {
 
 type Mode = 'password' | 'passphrase' | 'pin';
 
-export function PasswordTool({ slug, initialInput, initialMode }: PasswordToolProps) {
+export function PasswordTool({ initialMode }: PasswordToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'password');
   const [length, setLength] = useState(16);
   const [wordCount, setWordCount] = useState(4);

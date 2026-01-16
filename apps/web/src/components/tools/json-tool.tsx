@@ -4,7 +4,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import {
   Braces, Minimize2, CheckCircle, TreePine, Code, Search,
   Copy, Check, ChevronRight, ChevronDown, AlertCircle, Wand2,
-  FileJson, Hash, Type, ToggleLeft, Zap, Sparkles, Eye
+  FileJson, Hash, Type, ToggleLeft, Sparkles
 } from 'lucide-react';
 
 // Types from the tool package
@@ -211,7 +211,7 @@ interface JsonToolProps {
   initialMode?: string;
 }
 
-export function JsonTool({ slug, initialInput, initialMode }: JsonToolProps) {
+export function JsonTool({ initialInput, initialMode }: JsonToolProps) {
   const [input, setInput] = useState(initialInput || '');
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'format');
   const [query, setQuery] = useState('$');

@@ -12,7 +12,7 @@ interface QrCodeToolProps {
 
 type Mode = 'text' | 'url' | 'wifi';
 
-export function QrCodeTool({ slug, initialInput, initialMode }: QrCodeToolProps) {
+export function QrCodeTool({ initialInput, initialMode }: QrCodeToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'text');
   const [content, setContent] = useState(initialInput || '');
   const [size, setSize] = useState(200);

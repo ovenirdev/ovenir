@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { autoResizeTextarea } from '@/hooks/useAutoResize';
 import {
-  KeyRound, Shield, ShieldAlert, ShieldCheck, Clock, AlertTriangle,
+  Shield, ShieldAlert, ShieldCheck, Clock, AlertTriangle,
   Copy, Check, ChevronDown, ChevronRight, User, Building, Users,
   Calendar, Hash, Info, Timer, Fingerprint, Zap
 } from 'lucide-react';
@@ -62,7 +62,7 @@ const CLAIM_ICONS: Record<string, React.ReactNode> = {
   jti: <Fingerprint className="w-4 h-4" />,
 };
 
-export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
+export function JwtTool({ initialInput }: JwtToolProps) {
   const [input, setInput] = useState(initialInput || '');
   const [analysis, setAnalysis] = useState<JwtAnalysis | null>(null);
   const [error, setError] = useState<{ message: string; suggestion?: string } | null>(null);

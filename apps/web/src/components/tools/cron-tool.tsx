@@ -26,7 +26,7 @@ const COMMON_EXPRESSIONS = [
   { expr: '0 0 1 1 *', desc: 'Every January 1st' },
 ];
 
-export function CronTool({ slug, initialInput, initialMode }: CronToolProps) {
+export function CronTool({ initialInput }: CronToolProps) {
   const [expression, setExpression] = useState(initialInput || '');
   const [description, setDescription] = useState('');
   const [parts, setParts] = useState<CronPart[]>([]);
@@ -71,9 +71,9 @@ export function CronTool({ slug, initialInput, initialMode }: CronToolProps) {
     setTimeout(() => setCopied(false), 2000);
   }, [expression]);
 
-  const usePreset = useCallback((expr: string) => {
+  const applyPreset = (expr: string) => {
     setExpression(expr);
-  }, []);
+  };
 
   return (
     <div className="tool-container">
@@ -84,7 +84,7 @@ export function CronTool({ slug, initialInput, initialMode }: CronToolProps) {
             <button
               key={expr}
               className="variant-chip"
-              onClick={() => usePreset(expr)}
+              onClick={() => applyPreset(expr)}
               type="button"
               title={desc}
             >

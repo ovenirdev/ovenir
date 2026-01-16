@@ -18,7 +18,7 @@ interface Stats {
   entitiesConverted: number;
 }
 
-export function HtmlTool({ slug, initialInput, initialMode }: HtmlToolProps) {
+export function HtmlTool({ initialInput, initialMode }: HtmlToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'encode');
   const [input, setInput] = useState(initialInput || '');
   const [output, setOutput] = useState('');

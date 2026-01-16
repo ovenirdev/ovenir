@@ -56,14 +56,14 @@ const PART_ICONS: Record<string, React.ReactNode> = {
   origin: <LinkIcon className="w-4 h-4" />,
 };
 
-export function UrlTool({ slug, initialInput, initialMode }: UrlToolProps) {
+export function UrlTool({ initialInput, initialMode }: UrlToolProps) {
   const [input, setInput] = useState(initialInput || '');
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'parse');
   const [analysis, setAnalysis] = useState<UrlAnalysis | null>(null);
   const [result, setResult] = useState<string>('');
   const [error, setError] = useState<{ message: string; suggestion?: string } | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
-  const { ref: textareaRef, resize } = useAutoResize<HTMLTextAreaElement>({ minRows: 2, maxRows: 10 });
+  const { ref: textareaRef } = useAutoResize<HTMLTextAreaElement>({ minRows: 2, maxRows: 10 });
 
   const processUrl = useCallback(async () => {
     if (!input.trim()) {

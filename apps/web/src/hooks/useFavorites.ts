@@ -4,23 +4,28 @@ import { useState, useEffect, useCallback } from 'react';
 
 const STORAGE_KEY = 'ovenir-favorites';
 
+function getInitialFavorites(): string[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to load favorites:', e);
+  }
+  return [];
+}
+
 export function useFavorites() {
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>(getInitialFavorites);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load from localStorage on mount
+  // Mark as loaded on mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setFavorites(parsed);
-        }
-      }
-    } catch (e) {
-      console.warn('Failed to load favorites:', e);
-    }
     setIsLoaded(true);
   }, []);
 

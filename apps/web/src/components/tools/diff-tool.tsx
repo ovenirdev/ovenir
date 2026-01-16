@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { autoResizeTextarea } from '@/hooks/useAutoResize';
 import {
-  GitCompare, Copy, Check, AlertTriangle, Columns, AlignLeft,
+  Copy, Check, AlertTriangle, Columns, AlignLeft,
   Plus, Minus, Equal, Zap
 } from 'lucide-react';
 
@@ -30,7 +30,7 @@ interface DiffToolProps {
 
 type Mode = 'split' | 'inline';
 
-export function DiffTool({ slug, initialInput, initialMode }: DiffToolProps) {
+export function DiffTool({ initialMode }: DiffToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'split');
   const [original, setOriginal] = useState('');
   const [modified, setModified] = useState('');

@@ -12,7 +12,7 @@ interface YamlToolProps {
 
 type Mode = 'yaml-to-json' | 'json-to-yaml';
 
-export function YamlTool({ slug, initialInput, initialMode }: YamlToolProps) {
+export function YamlTool({ initialInput, initialMode }: YamlToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'yaml-to-json');
   const [input, setInput] = useState(initialInput || '');
   const [indent, setIndent] = useState(2);

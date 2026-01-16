@@ -32,13 +32,13 @@ const VERSION_INFO: Record<Version, { name: string; desc: string }> = {
   v7: { name: 'v7', desc: 'Unix + Random' },
 };
 
-export function UuidTool({ slug, initialInput, initialMode }: UuidToolProps) {
+export function UuidTool({ initialInput, initialMode }: UuidToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'generate');
   const [version, setVersion] = useState<Version>('v4');
   const [parseInput, setParseInput] = useState(initialInput || '');
   const [bulkCount, setBulkCount] = useState(10);
-  const [uppercase, setUppercase] = useState(false);
-  const [noDashes, setNoDashes] = useState(false);
+  const [uppercase] = useState(false);
+  const [noDashes] = useState(false);
   const [generatedUuid, setGeneratedUuid] = useState<string | null>(null);
   const [uuidInfo, setUuidInfo] = useState<UuidInfo | null>(null);
   const [bulkUuids, setBulkUuids] = useState<string[]>([]);
@@ -102,7 +102,7 @@ export function UuidTool({ slug, initialInput, initialMode }: UuidToolProps) {
     if (mode === 'generate') {
       generateSingle();
     }
-  }, [mode]);
+  }, [mode, generateSingle]);
 
   useEffect(() => {
     if (mode === 'parse') {

@@ -35,7 +35,6 @@ interface ToolConfig {
 interface ToolPageClientProps {
   slug: string;
   config: ToolConfig;
-  relatedTools: { id: string; name: string; description: string; icon: string }[];
   initialInput?: string;
   initialMode?: string;
 }
@@ -73,7 +72,7 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType<ToolComponentProps>> =
   xml: XmlTool,
 };
 
-export function ToolPageClient({ slug, config, relatedTools, initialInput, initialMode }: ToolPageClientProps) {
+export function ToolPageClient({ slug, config, initialInput, initialMode }: ToolPageClientProps) {
   const ToolComponent = TOOL_COMPONENTS[slug];
 
   if (!ToolComponent) {
@@ -81,7 +80,7 @@ export function ToolPageClient({ slug, config, relatedTools, initialInput, initi
       <div className="tool-page">
         <div className="tool-info">
           <h1>Tool Not Found</h1>
-          <p>The tool "{slug}" is not available yet.</p>
+          <p>The tool &quot;{slug}&quot; is not available yet.</p>
         </div>
       </div>
     );

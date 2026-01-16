@@ -18,7 +18,7 @@ interface BaseConverterToolProps {
 
 type Mode = 'decimal' | 'binary' | 'octal' | 'hex';
 
-export function BaseConverterTool({ slug, initialInput, initialMode }: BaseConverterToolProps) {
+export function BaseConverterTool({ initialInput, initialMode }: BaseConverterToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'decimal');
   const [value, setValue] = useState(initialInput || '');
   const [conversions, setConversions] = useState<Conversions | null>(null);

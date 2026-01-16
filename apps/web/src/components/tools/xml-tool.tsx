@@ -18,7 +18,7 @@ interface Stats {
   textNodes: number;
 }
 
-export function XmlTool({ slug, initialInput, initialMode }: XmlToolProps) {
+export function XmlTool({ initialInput, initialMode }: XmlToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'format');
   const [xml, setXml] = useState(initialInput || '');
   const [indent, setIndent] = useState(2);

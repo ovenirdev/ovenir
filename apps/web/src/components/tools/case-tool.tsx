@@ -21,7 +21,7 @@ const CASE_INFO: Record<string, { label: string; example: string }> = {
   upper: { label: 'UPPERCASE', example: 'ALL UPPERCASE TEXT' },
 };
 
-export function CaseTool({ slug, initialInput, initialMode }: CaseToolProps) {
+export function CaseTool({ initialInput }: CaseToolProps) {
   const [text, setText] = useState(initialInput || '');
   const [results, setResults] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);

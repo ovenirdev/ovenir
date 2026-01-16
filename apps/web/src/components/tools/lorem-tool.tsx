@@ -21,7 +21,7 @@ interface LoremToolProps {
 
 type Mode = 'paragraphs' | 'sentences' | 'words';
 
-export function LoremTool({ slug, initialInput, initialMode }: LoremToolProps) {
+export function LoremTool({ initialMode }: LoremToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'paragraphs');
   const [count, setCount] = useState(3);
   const [startWithLorem, setStartWithLorem] = useState(true);
@@ -118,7 +118,7 @@ export function LoremTool({ slug, initialInput, initialMode }: LoremToolProps) {
                 onClick={() => setStartWithLorem(!startWithLorem)}
                 type="button"
               >
-                <span>Start with "Lorem ipsum..."</span>
+                <span>Start with &quot;Lorem ipsum...&quot;</span>
               </button>
             </div>
 

@@ -38,7 +38,7 @@ const COMMON_PATTERNS = [
   { name: 'Date', pattern: '\\d{4}-\\d{2}-\\d{2}' },
 ];
 
-export function RegexTool({ slug, initialInput, initialMode }: RegexToolProps) {
+export function RegexTool({ initialInput, initialMode }: RegexToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'test');
   const [pattern, setPattern] = useState(initialInput || '');
   const [text, setText] = useState('');
@@ -130,12 +130,13 @@ export function RegexTool({ slug, initialInput, initialMode }: RegexToolProps) {
         </div>
 
         <div className="variant-chips">
-          {Object.entries({ g: 'Global', i: 'Case-i', m: 'Multi' }).map(([flag, label]) => (
+          {Object.entries({ g: 'Global', i: 'Case-i', m: 'Multi' }).map(([flag, flagLabel]) => (
             <button
               key={flag}
               className={`variant-chip ${flags[flag as keyof typeof flags] ? 'active' : ''}`}
               onClick={() => setFlags({ ...flags, [flag]: !flags[flag as keyof typeof flags] })}
               type="button"
+              title={flagLabel}
             >
               <span>{flag}</span>
             </button>

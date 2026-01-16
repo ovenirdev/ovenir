@@ -12,7 +12,7 @@ interface SqlToolProps {
 
 type Mode = 'format' | 'minify';
 
-export function SqlTool({ slug, initialInput, initialMode }: SqlToolProps) {
+export function SqlTool({ initialInput, initialMode }: SqlToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'format');
   const [sql, setSql] = useState(initialInput || '');
   const [indent, setIndent] = useState(2);

@@ -5,7 +5,7 @@ import { autoResizeTextarea } from '@/hooks/useAutoResize';
 import { useSearchParams, useRouter } from 'next/navigation';
 import {
   Copy, Check, Trash2, Share2,
-  Zap, AlertTriangle, Clock, Globe, RefreshCw,
+  Zap, AlertTriangle, Clock, Globe,
 } from 'lucide-react';
 
 interface TimestampToolProps {
@@ -51,7 +51,7 @@ export function TimestampTool({ slug, initialInput, initialMode }: TimestampTool
   const [timezone, setTimezone] = useState('local');
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
-  const [nowTimestamp, setNowTimestamp] = useState<number>(Date.now());
+  const [nowTimestamp, setNowTimestamp] = useState<number>(() => Date.now());
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -66,49 +66,31 @@ export function TimestampTool({ slug, initialInput, initialMode }: TimestampTool
     return () => clearInterval(interval);
   }, []);
 
-  // URL params init (only if no initial props were provided)
-  useEffect(() => {
-    if (initialInput || initialMode) return; // Props take precedence
+  // Relative time helper
+  const getRelativeTime = useCallback((date: Date): string => {
+    const now = new Date();
+    const diffMs = date.getTime() - now.getTime();
+    const diffSec = Math.round(diffMs / 1000);
+    const diffMin = Math.round(diffSec / 60);
+    const diffHour = Math.round(diffMin / 60);
+    const diffDay = Math.round(diffHour / 24);
+    const diffWeek = Math.round(diffDay / 7);
+    const diffMonth = Math.round(diffDay / 30);
+    const diffYear = Math.round(diffDay / 365);
 
-    const urlInput = searchParams.get('input');
-    const urlMode = searchParams.get('mode');
+    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
-    if (urlInput) {
-      try {
-        setInput(decodeURIComponent(urlInput));
-      } catch {
-        setInput(urlInput);
-      }
-    }
-    if (urlMode === 'toDate' || urlMode === 'toTimestamp') {
-      setMode(urlMode);
-    }
-  }, [searchParams, initialInput, initialMode]);
-
-  // Process input
-  useEffect(() => {
-    if (!input.trim()) {
-      setOutput(null);
-      setError(null);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      try {
-        const result = processTimestamp(input, mode, timezone);
-        setOutput(result);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Invalid input');
-        setOutput(null);
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [input, mode, timezone]);
+    if (Math.abs(diffSec) < 60) return rtf.format(diffSec, 'second');
+    if (Math.abs(diffMin) < 60) return rtf.format(diffMin, 'minute');
+    if (Math.abs(diffHour) < 24) return rtf.format(diffHour, 'hour');
+    if (Math.abs(diffDay) < 7) return rtf.format(diffDay, 'day');
+    if (Math.abs(diffWeek) < 4) return rtf.format(diffWeek, 'week');
+    if (Math.abs(diffMonth) < 12) return rtf.format(diffMonth, 'month');
+    return rtf.format(diffYear, 'year');
+  }, []);
 
   // Process timestamp logic
-  const processTimestamp = (
+  const processTimestamp = useCallback((
     rawInput: string,
     currentMode: 'toDate' | 'toTimestamp',
     tz: string
@@ -170,30 +152,48 @@ export function TimestampTool({ slug, initialInput, initialMode }: TimestampTool
         timezone: tz === 'local' ? Intl.DateTimeFormat().resolvedOptions().timeZone : tz,
       };
     }
-  };
+  }, [getRelativeTime]);
 
-  // Relative time helper
-  const getRelativeTime = (date: Date): string => {
-    const now = new Date();
-    const diffMs = date.getTime() - now.getTime();
-    const diffSec = Math.round(diffMs / 1000);
-    const diffMin = Math.round(diffSec / 60);
-    const diffHour = Math.round(diffMin / 60);
-    const diffDay = Math.round(diffHour / 24);
-    const diffWeek = Math.round(diffDay / 7);
-    const diffMonth = Math.round(diffDay / 30);
-    const diffYear = Math.round(diffDay / 365);
+  // URL params init (only if no initial props were provided)
+  useEffect(() => {
+    if (initialInput || initialMode) return; // Props take precedence
 
-    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+    const urlInput = searchParams.get('input');
+    const urlMode = searchParams.get('mode');
 
-    if (Math.abs(diffSec) < 60) return rtf.format(diffSec, 'second');
-    if (Math.abs(diffMin) < 60) return rtf.format(diffMin, 'minute');
-    if (Math.abs(diffHour) < 24) return rtf.format(diffHour, 'hour');
-    if (Math.abs(diffDay) < 7) return rtf.format(diffDay, 'day');
-    if (Math.abs(diffWeek) < 4) return rtf.format(diffWeek, 'week');
-    if (Math.abs(diffMonth) < 12) return rtf.format(diffMonth, 'month');
-    return rtf.format(diffYear, 'year');
-  };
+    if (urlInput) {
+      try {
+        setInput(decodeURIComponent(urlInput));
+      } catch {
+        setInput(urlInput);
+      }
+    }
+    if (urlMode === 'toDate' || urlMode === 'toTimestamp') {
+      setMode(urlMode);
+    }
+  }, [searchParams, initialInput, initialMode]);
+
+  // Process input
+  useEffect(() => {
+    if (!input.trim()) {
+      setOutput(null);
+      setError(null);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      try {
+        const result = processTimestamp(input, mode, timezone);
+        setOutput(result);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Invalid input');
+        setOutput(null);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [input, mode, timezone, processTimestamp]);
 
   // Handlers
   const handleCopy = useCallback(async (text: string, type: string) => {

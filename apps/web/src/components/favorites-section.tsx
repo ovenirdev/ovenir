@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Star, X, Braces, Binary, KeyRound, Link as LinkIcon, Hash,
@@ -46,25 +46,30 @@ const TOOL_ICONS: Record<string, React.ReactNode> = {
 };
 
 export function FavoritesSection({ favorites, tools, onRemove }: FavoritesSectionProps) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [animationReady, setAnimationReady] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Filter tools that are favorites
-  const favoriteTools = favorites
-    .map((id) => tools.find((t) => t.id === id))
-    .filter(Boolean) as FavoriteItem[];
+  const favoriteTools = useMemo(() =>
+    favorites
+      .map((id) => tools.find((t) => t.id === id))
+      .filter(Boolean) as FavoriteItem[],
+    [favorites, tools]
+  );
 
-  // Animate in when we have favorites
+  // Visibility is derived from favoriteTools length
+  const hasFavorites = favoriteTools.length > 0;
+
+  // Trigger animation after mount
   useEffect(() => {
-    if (favoriteTools.length > 0 && !isVisible) {
-      // Small delay for smoother appearance
-      const timer = setTimeout(() => setIsVisible(true), 100);
+    if (hasFavorites && !animationReady) {
+      const timer = setTimeout(() => setAnimationReady(true), 100);
       return () => clearTimeout(timer);
-    } else if (favoriteTools.length === 0 && isVisible) {
-      setIsVisible(false);
     }
-  }, [favoriteTools.length, isVisible]);
+  }, [hasFavorites, animationReady]);
+
+  const isVisible = hasFavorites && animationReady;
 
   // Handle remove with animation
   const handleRemove = (id: string) => {
@@ -76,7 +81,7 @@ export function FavoritesSection({ favorites, tools, onRemove }: FavoritesSectio
     }, 300);
   };
 
-  if (favoriteTools.length === 0 && !isVisible) {
+  if (!hasFavorites) {
     return null;
   }
 

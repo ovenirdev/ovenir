@@ -20,7 +20,7 @@ interface Changes {
   trimmed: boolean;
 }
 
-export function SlugTool({ slug: toolSlug, initialInput, initialMode }: SlugToolProps) {
+export function SlugTool({ initialInput }: SlugToolProps) {
   const [input, setInput] = useState(initialInput || '');
   const [separator, setSeparator] = useState<Separator>('-');
   const [lowercase, setLowercase] = useState(true);

@@ -12,7 +12,7 @@ interface MarkdownToolProps {
 
 type Mode = 'preview' | 'html';
 
-export function MarkdownTool({ slug, initialInput, initialMode }: MarkdownToolProps) {
+export function MarkdownTool({ initialInput, initialMode }: MarkdownToolProps) {
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'preview');
   const [markdown, setMarkdown] = useState(initialInput || '');
   const [html, setHtml] = useState('');

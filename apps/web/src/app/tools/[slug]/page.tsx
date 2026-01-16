@@ -58,23 +58,11 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
   const initialInput = input ? decodeURIComponent(input) : undefined;
   const initialMode = mode;
 
-  // Get related tools metadata
-  const relatedIds = tool.meta.related ?? [];
-  const relatedTools = relatedIds
-    .map(id => {
-      const t = getToolById(id);
-      const c = getToolConfig(id);
-      if (!t || !c) return null;
-      return { id, name: c.name, description: c.description, icon: t.meta.icon };
-    })
-    .filter(Boolean) as { id: string; name: string; description: string; icon: string }[];
-
   return (
     <Suspense fallback={null}>
       <ToolPageClient
         slug={slug}
         config={config}
-        relatedTools={relatedTools}
         initialInput={initialInput}
         initialMode={initialMode}
       />

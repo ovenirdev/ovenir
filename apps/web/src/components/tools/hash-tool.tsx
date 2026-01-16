@@ -37,7 +37,7 @@ const ALGORITHM_INFO: Record<string, { color: string; level: string; note: strin
   'SHA-512': { color: '#3B82F6', level: 'secure', note: 'Maximum security' },
 };
 
-export function HashTool({ slug, initialInput, initialMode }: HashToolProps) {
+export function HashTool({ initialInput, initialMode }: HashToolProps) {
   const [input, setInput] = useState(initialInput || '');
   const [mode, setMode] = useState<Mode>((initialMode as Mode) || 'generate');
   const [compareHash, setCompareHash] = useState('');
