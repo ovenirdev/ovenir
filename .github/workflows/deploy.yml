@@ -17,7 +17,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd ~/apps/ovenir
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
             docker build -t ovenir-web .
             docker stop ovenir-web || true
             docker rm ovenir-web || true
