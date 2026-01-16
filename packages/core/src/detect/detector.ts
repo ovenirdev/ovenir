@@ -47,7 +47,7 @@ export function detectFormat(input: string): DetectionResult {
   return {
     input,
     detected,
-    bestMatch: detected.length > 0 ? detected[0] : null,
+    bestMatch: detected[0] ?? null,
     hasSecrets,
   };
 }

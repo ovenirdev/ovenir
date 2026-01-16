@@ -19,12 +19,14 @@ export const FORMAT_PATTERNS: FormatPattern[] = [
       const trimmed = input.trim();
       const parts = trimmed.split('.');
       if (parts.length !== 3) return 0;
+      const headerPart = parts[0];
+      if (!headerPart) return 0;
       try {
-        const header = JSON.parse(atob(parts[0]));
+        const header = JSON.parse(atob(headerPart));
         if (header.alg && header.typ === 'JWT') return 95;
         if (header.alg) return 85;
         return 0;
-      } catch (e) {
+      } catch {
         return 0;
       }
     },
