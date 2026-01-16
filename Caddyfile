@@ -1,5 +1,5 @@
 ovenir.com {
-    reverse_proxy ovenir-web:3000
+    reverse_proxy web:3000
 }
 
 www.ovenir.com {

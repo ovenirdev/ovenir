@@ -25,4 +25,5 @@ jobs:
             docker builder prune -af || true
             docker compose build --no-cache --pull
             docker compose up -d
-            docker image prune -af
+            docker image prune -f
+            docker compose ps
