@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { Tool } from '@ovenir/core';
-import { meta } from './meta';
+import { meta, config } from './meta';
 
 const inputSchema = z.object({
   mode: z.enum(['encode', 'decode']),
@@ -16,7 +16,6 @@ type Output = z.infer<typeof outputSchema>;
 
 function run(input: Input): Output {
   if (input.mode === 'encode') {
-    // Handle Unicode properly
     const bytes = new TextEncoder().encode(input.input);
     const binary = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join('');
     return { output: btoa(binary) };
@@ -34,4 +33,5 @@ export const base64Tool: Tool<Input, Output> = {
   run,
 };
 
+export { meta, config };
 export default base64Tool;

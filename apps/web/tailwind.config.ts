@@ -1,0 +1,181 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: ["class", '[data-theme="dark"]'],
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        bg: {
+          primary: "var(--color-bg-primary)",
+          secondary: "var(--color-bg-secondary)",
+          tertiary: "var(--color-bg-tertiary)",
+          elevated: "var(--color-bg-elevated)",
+          sunken: "var(--color-bg-sunken)",
+        },
+        text: {
+          primary: "var(--color-text-primary)",
+          secondary: "var(--color-text-secondary)",
+          tertiary: "var(--color-text-tertiary)",
+          inverse: "var(--color-text-inverse)",
+        },
+        border: {
+          DEFAULT: "var(--color-border)",
+          subtle: "var(--color-border-subtle)",
+          strong: "var(--color-border-strong)",
+        },
+        accent: {
+          DEFAULT: "var(--color-accent)",
+          hover: "var(--color-accent-hover)",
+          active: "var(--color-accent-active)",
+          subtle: "var(--color-accent-subtle)",
+          muted: "var(--color-accent-muted)",
+        },
+        danger: {
+          DEFAULT: "var(--color-danger)",
+          hover: "var(--color-danger-hover)",
+          subtle: "var(--color-danger-subtle)",
+          text: "var(--color-danger-text)",
+        },
+        warning: {
+          DEFAULT: "var(--color-warning)",
+          subtle: "var(--color-warning-subtle)",
+          text: "var(--color-warning-text)",
+        },
+        success: {
+          DEFAULT: "var(--color-success)",
+          subtle: "var(--color-success-subtle)",
+          text: "var(--color-success-text)",
+        },
+        info: {
+          DEFAULT: "var(--color-info)",
+          subtle: "var(--color-info-subtle)",
+          text: "var(--color-info-text)",
+        },
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
+      },
+      fontSize: {
+        xs: ["var(--text-xs)", { lineHeight: "var(--leading-normal)" }],
+        sm: ["var(--text-sm)", { lineHeight: "var(--leading-normal)" }],
+        base: ["var(--text-base)", { lineHeight: "var(--leading-normal)" }],
+        lg: ["var(--text-lg)", { lineHeight: "var(--leading-normal)" }],
+        xl: ["var(--text-xl)", { lineHeight: "var(--leading-tight)" }],
+        "2xl": ["var(--text-2xl)", { lineHeight: "var(--leading-tight)" }],
+        "3xl": ["var(--text-3xl)", { lineHeight: "var(--leading-tight)" }],
+        "4xl": ["var(--text-4xl)", { lineHeight: "var(--leading-none)" }],
+        "5xl": ["var(--text-5xl)", { lineHeight: "var(--leading-none)" }],
+      },
+      borderRadius: {
+        sm: "var(--radius-sm)",
+        md: "var(--radius-md)",
+        lg: "var(--radius-lg)",
+        xl: "var(--radius-xl)",
+        "2xl": "var(--radius-2xl)",
+      },
+      boxShadow: {
+        xs: "var(--shadow-xs)",
+        sm: "var(--shadow-sm)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        xl: "var(--shadow-xl)",
+        "2xl": "var(--shadow-2xl)",
+        glow: "var(--shadow-glow)",
+        "glow-lg": "var(--shadow-glow-lg)",
+        inner: "var(--shadow-inner)",
+      },
+      transitionDuration: {
+        instant: "var(--duration-instant)",
+        fast: "var(--duration-fast)",
+        normal: "var(--duration-normal)",
+        slow: "var(--duration-slow)",
+        slower: "var(--duration-slower)",
+      },
+      transitionTimingFunction: {
+        default: "var(--ease-default)",
+        bounce: "var(--ease-bounce)",
+        spring: "var(--ease-spring)",
+      },
+      zIndex: {
+        dropdown: "var(--z-dropdown)",
+        sticky: "var(--z-sticky)",
+        overlay: "var(--z-overlay)",
+        modal: "var(--z-modal)",
+        popover: "var(--z-popover)",
+        toast: "var(--z-toast)",
+        tooltip: "var(--z-tooltip)",
+        command: "var(--z-command)",
+      },
+      spacing: {
+        "0.5": "var(--space-0-5)",
+        "1": "var(--space-1)",
+        "1.5": "var(--space-1-5)",
+        "2": "var(--space-2)",
+        "2.5": "var(--space-2-5)",
+        "3": "var(--space-3)",
+        "3.5": "var(--space-3-5)",
+        "4": "var(--space-4)",
+        "5": "var(--space-5)",
+        "6": "var(--space-6)",
+        "7": "var(--space-7)",
+        "8": "var(--space-8)",
+        "9": "var(--space-9)",
+        "10": "var(--space-10)",
+        "12": "var(--space-12)",
+        "14": "var(--space-14)",
+        "16": "var(--space-16)",
+        "20": "var(--space-20)",
+        "24": "var(--space-24)",
+        "32": "var(--space-32)",
+      },
+      width: {
+        sidebar: "var(--width-sidebar)",
+        "content-max": "var(--width-content-max)",
+        "tool-max": "var(--width-tool-max)",
+      },
+      maxWidth: {
+        content: "var(--width-content-max)",
+        tool: "var(--width-tool-max)",
+      },
+      animation: {
+        "fade-in": "fadeIn var(--duration-normal) var(--ease-out)",
+        "fade-out": "fadeOut var(--duration-fast) var(--ease-in)",
+        "slide-up": "slideUp var(--duration-normal) var(--ease-out)",
+        "slide-down": "slideDown var(--duration-normal) var(--ease-out)",
+        "scale-in": "scaleIn var(--duration-normal) var(--ease-spring)",
+        "spin-slow": "spin 2s linear infinite",
+      },
+      keyframes: {
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        fadeOut: {
+          from: { opacity: "1" },
+          to: { opacity: "0" },
+        },
+        slideUp: {
+          from: { transform: "translateY(8px)", opacity: "0" },
+          to: { transform: "translateY(0)", opacity: "1" },
+        },
+        slideDown: {
+          from: { transform: "translateY(-8px)", opacity: "0" },
+          to: { transform: "translateY(0)", opacity: "1" },
+        },
+        scaleIn: {
+          from: { transform: "scale(0.95)", opacity: "0" },
+          to: { transform: "scale(1)", opacity: "1" },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
