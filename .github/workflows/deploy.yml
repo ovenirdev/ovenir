@@ -19,8 +19,7 @@ jobs:
             cd ~/apps/ovenir
             git fetch origin main
             git reset --hard origin/main
-            docker build -t ovenir-web .
-            docker stop ovenir-web || true
-            docker rm ovenir-web || true
-            docker run -d --name ovenir-web -p 3000:3000 --restart unless-stopped ovenir-web
+            docker compose down || true
+            docker compose build --no-cache
+            docker compose up -d
             docker image prune -f

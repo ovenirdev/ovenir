@@ -1,0 +1,33 @@
+services:
+  web:
+    build: .
+    container_name: ovenir-web
+    restart: unless-stopped
+    expose:
+      - "3000"
+    networks:
+      - ovenir-net
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: ovenir-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - ovenir-net
+    depends_on:
+      - web
+
+networks:
+  ovenir-net:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

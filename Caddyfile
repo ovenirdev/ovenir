@@ -1,0 +1,7 @@
+ovenir.com {
+    reverse_proxy ovenir-web:3000
+}
+
+www.ovenir.com {
+    redir https://ovenir.com{uri} permanent
+}
