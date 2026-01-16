@@ -4,10 +4,9 @@ import { useState, useCallback, useEffect } from 'react';
 import {
   KeyRound, Shield, ShieldAlert, ShieldCheck, Clock, AlertTriangle,
   Copy, Check, ChevronDown, ChevronRight, User, Building, Users,
-  Calendar, Hash, Info, AlertCircle, Timer, Fingerprint, Eye, EyeOff
+  Calendar, Hash, Info, Timer, Fingerprint, Zap
 } from 'lucide-react';
 
-// Types
 interface JwtClaim {
   key: string;
   value: unknown;
@@ -52,7 +51,6 @@ interface JwtToolProps {
   initialMode?: string;
 }
 
-// Claim icons
 const CLAIM_ICONS: Record<string, React.ReactNode> = {
   iss: <Building className="w-4 h-4" />,
   sub: <User className="w-4 h-4" />,
@@ -68,12 +66,10 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
   const [analysis, setAnalysis] = useState<JwtAnalysis | null>(null);
   const [error, setError] = useState<{ message: string; suggestion?: string } | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
-  const [showRaw, setShowRaw] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     new Set(['header', 'payload', 'security', 'timeline'])
   );
 
-  // Process JWT
   const processJwt = useCallback(async () => {
     if (!input.trim()) {
       setAnalysis(null);
@@ -99,14 +95,12 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
     return () => clearTimeout(timer);
   }, [processJwt]);
 
-  // Copy handler
   const handleCopy = useCallback(async (text: string, id: string) => {
     await navigator.clipboard.writeText(text);
     setCopied(id);
     setTimeout(() => setCopied(null), 2000);
   }, []);
 
-  // Toggle section
   const toggleSection = useCallback((section: string) => {
     setExpandedSections(prev => {
       const next = new Set(prev);
@@ -119,17 +113,6 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
     });
   }, []);
 
-  // Get status color
-  const getStatusColor = (status: JwtTimeline['status']) => {
-    switch (status) {
-      case 'valid': return 'var(--color-success)';
-      case 'expired': return 'var(--color-error)';
-      case 'not-yet-valid': return 'var(--color-warning)';
-      default: return 'var(--color-text-secondary)';
-    }
-  };
-
-  // Get severity icon
   const getSeverityIcon = (severity: JwtSecurityIssue['severity']) => {
     switch (severity) {
       case 'critical': return <ShieldAlert className="w-4 h-4" />;
@@ -139,164 +122,163 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
   };
 
   return (
-    <div className="jwt-tool">
-      {/* Input Section */}
-      <div className="jwt-input-section">
-        <div className="jwt-input-header">
-          <KeyRound className="w-5 h-5" />
-          <span>Paste JWT Token</span>
-          {analysis && (
-            <button
-              className="jwt-raw-toggle"
-              onClick={() => setShowRaw(!showRaw)}
-            >
-              {showRaw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              {showRaw ? 'Hide raw' : 'Show raw'}
-            </button>
-          )}
+    <div className="tool-container">
+      {/* Input */}
+      <div className={`input-zone ${error ? 'has-error' : ''}`}>
+        <div className="zone-header">
+          <div className="zone-title">
+            <span className="zone-label">JWT TOKEN</span>
+            {analysis && (
+              <span className="auto-badge">
+                <Zap className="w-3 h-3" />
+                {analysis.size.total} chars
+              </span>
+            )}
+          </div>
         </div>
-
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-          className="jwt-input"
+          className="zone-textarea"
           spellCheck={false}
         />
-
-        {/* Raw token display with color coding */}
-        {showRaw && analysis && (
-          <div className="jwt-raw-display">
-            <span className="jwt-part jwt-header">{analysis.parts.header}</span>
-            <span className="jwt-dot">.</span>
-            <span className="jwt-part jwt-payload">{analysis.parts.payload}</span>
-            <span className="jwt-dot">.</span>
-            <span className="jwt-part jwt-signature">{analysis.parts.signature}</span>
-          </div>
-        )}
       </div>
 
-      {/* Error State */}
+      {/* Error */}
       {error && (
-        <div className="jwt-error">
-          <AlertCircle className="w-5 h-5" />
-          <div className="jwt-error-content">
-            <strong>{error.message}</strong>
-            {error.suggestion && <span>{error.suggestion}</span>}
+        <div className="output-zone has-error">
+          <div className="zone-header">
+            <div className="zone-title">
+              <span className="zone-label">ERROR</span>
+              <span className="error-badge"><AlertTriangle className="w-3 h-3" />Invalid</span>
+            </div>
+          </div>
+          <div className="zone-output">
+            <span className="output-error">{error.message}</span>
+            {error.suggestion && <p className="output-hint">{error.suggestion}</p>}
           </div>
         </div>
       )}
 
-      {/* Analysis Results */}
+      {/* Results */}
       {analysis && (
-        <div className="jwt-results">
+        <>
           {/* Status Banner */}
-          <div
-            className={`jwt-status-banner jwt-status-${analysis.timeline.status}`}
-            style={{ '--status-color': getStatusColor(analysis.timeline.status) } as React.CSSProperties}
-          >
-            {analysis.timeline.status === 'valid' && <ShieldCheck className="w-5 h-5" />}
-            {analysis.timeline.status === 'expired' && <ShieldAlert className="w-5 h-5" />}
-            {analysis.timeline.status === 'not-yet-valid' && <Clock className="w-5 h-5" />}
-            {analysis.timeline.status === 'no-expiry' && <Shield className="w-5 h-5" />}
-
-            <div className="jwt-status-text">
-              <strong>
-                {analysis.timeline.status === 'valid' && 'Token Valid'}
-                {analysis.timeline.status === 'expired' && 'Token Expired'}
-                {analysis.timeline.status === 'not-yet-valid' && 'Not Yet Valid'}
-                {analysis.timeline.status === 'no-expiry' && 'No Expiration'}
-              </strong>
-              {analysis.timeline.remainingTime && analysis.timeline.status === 'valid' && (
-                <span>Expires in {analysis.timeline.remainingTime}</span>
-              )}
-            </div>
-
-            {analysis.timeline.percentElapsed !== undefined && (
-              <div className="jwt-lifetime-bar">
-                <div
-                  className="jwt-lifetime-progress"
-                  style={{ width: `${analysis.timeline.percentElapsed}%` }}
-                />
+          <div className={`output-zone jwt-status-${analysis.timeline.status}`}>
+            <div className="zone-header">
+              <div className="zone-title">
+                <span className="zone-label">STATUS</span>
+                {analysis.timeline.status === 'valid' && (
+                  <span className="success-badge"><ShieldCheck className="w-3 h-3" />Valid</span>
+                )}
+                {analysis.timeline.status === 'expired' && (
+                  <span className="error-badge"><ShieldAlert className="w-3 h-3" />Expired</span>
+                )}
+                {analysis.timeline.status === 'not-yet-valid' && (
+                  <span className="warning-badge"><Clock className="w-3 h-3" />Not Yet Valid</span>
+                )}
+                {analysis.timeline.status === 'no-expiry' && (
+                  <span className="auto-badge"><Shield className="w-3 h-3" />No Expiry</span>
+                )}
               </div>
-            )}
+            </div>
+            <div className="zone-output">
+              <div className="jwt-status-info">
+                {analysis.timeline.remainingTime && analysis.timeline.status === 'valid' && (
+                  <p>Expires in {analysis.timeline.remainingTime}</p>
+                )}
+                {analysis.timeline.percentElapsed !== undefined && (
+                  <div className="jwt-lifetime-bar">
+                    <div
+                      className="jwt-lifetime-progress"
+                      style={{ width: `${analysis.timeline.percentElapsed}%` }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Security Issues */}
           {analysis.securityIssues.length > 0 && (
-            <div className="jwt-section">
-              <button
-                className="jwt-section-header"
-                onClick={() => toggleSection('security')}
-              >
-                {expandedSections.has('security') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-                <Shield className="w-4 h-4" />
-                <span>Security Analysis</span>
-                <span className="jwt-badge">{analysis.securityIssues.length}</span>
+            <div className="output-zone">
+              <button className="zone-header clickable" onClick={() => toggleSection('security')} type="button">
+                <div className="zone-title">
+                  {expandedSections.has('security') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                  <span className="zone-label">SECURITY</span>
+                  <span className="warning-badge">{analysis.securityIssues.length} issues</span>
+                </div>
               </button>
-
               {expandedSections.has('security') && (
-                <div className="jwt-security-list">
-                  {analysis.securityIssues.map((issue) => (
-                    <div key={issue.code} className={`jwt-security-item jwt-severity-${issue.severity}`}>
-                      {getSeverityIcon(issue.severity)}
-                      <div className="jwt-security-content">
-                        <strong>{issue.title}</strong>
-                        <span>{issue.description}</span>
+                <div className="zone-output">
+                  <div className="jwt-security-list">
+                    {analysis.securityIssues.map((issue) => (
+                      <div key={issue.code} className={`jwt-security-item severity-${issue.severity}`}>
+                        {getSeverityIcon(issue.severity)}
+                        <div>
+                          <strong>{issue.title}</strong>
+                          <span>{issue.description}</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
           )}
 
-          {/* Header Section */}
-          <div className="jwt-section">
-            <button
-              className="jwt-section-header"
-              onClick={() => toggleSection('header')}
-            >
-              {expandedSections.has('header') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-              <Hash className="w-4 h-4" />
-              <span>Header</span>
-              <span className="jwt-size">{analysis.size.header} chars</span>
-            </button>
-
-            {expandedSections.has('header') && (
-              <div className="jwt-json-block">
+          {/* Header */}
+          <div className="output-zone">
+            <button className="zone-header clickable" onClick={() => toggleSection('header')} type="button">
+              <div className="zone-title">
+                {expandedSections.has('header') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                <span className="zone-label">HEADER</span>
+                <span className="auto-badge">{analysis.size.header} chars</span>
+              </div>
+              <div className="zone-actions">
                 <button
-                  className="jwt-copy-btn"
-                  onClick={() => handleCopy(JSON.stringify(analysis.header, null, 2), 'header')}
+                  className="action-btn"
+                  onClick={(e) => { e.stopPropagation(); handleCopy(JSON.stringify(analysis.header, null, 2), 'header'); }}
+                  title="Copy"
+                  type="button"
                 >
                   {copied === 'header' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 </button>
-                <pre>{JSON.stringify(analysis.header, null, 2)}</pre>
+              </div>
+            </button>
+            {expandedSections.has('header') && (
+              <div className="zone-output">
+                <pre className="json-output">{JSON.stringify(analysis.header, null, 2)}</pre>
               </div>
             )}
           </div>
 
-          {/* Payload Section */}
-          <div className="jwt-section">
-            <button
-              className="jwt-section-header"
-              onClick={() => toggleSection('payload')}
-            >
-              {expandedSections.has('payload') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-              <KeyRound className="w-4 h-4" />
-              <span>Payload</span>
-              <span className="jwt-size">{analysis.size.payload} chars</span>
+          {/* Payload */}
+          <div className="output-zone">
+            <button className="zone-header clickable" onClick={() => toggleSection('payload')} type="button">
+              <div className="zone-title">
+                {expandedSections.has('payload') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                <span className="zone-label">PAYLOAD</span>
+                <span className="auto-badge">{analysis.size.payload} chars</span>
+              </div>
+              <div className="zone-actions">
+                <button
+                  className="action-btn"
+                  onClick={(e) => { e.stopPropagation(); handleCopy(JSON.stringify(analysis.payload, null, 2), 'payload'); }}
+                  title="Copy"
+                  type="button"
+                >
+                  {copied === 'payload' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
             </button>
-
             {expandedSections.has('payload') && (
-              <>
+              <div className="zone-output">
                 {/* Claims Grid */}
                 <div className="jwt-claims-grid">
                   {analysis.claims.map((claim) => (
-                    <div
-                      key={claim.key}
-                      className={`jwt-claim jwt-claim-${claim.type}`}
-                    >
+                    <div key={claim.key} className={`jwt-claim claim-${claim.type}`}>
                       <div className="jwt-claim-header">
                         {CLAIM_ICONS[claim.key] || <Hash className="w-4 h-4" />}
                         <span className="jwt-claim-key">{claim.key}</span>
@@ -322,6 +304,7 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
                             : String(claim.value),
                           `claim-${claim.key}`
                         )}
+                        type="button"
                       >
                         {copied === `claim-${claim.key}` ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                       </button>
@@ -330,122 +313,107 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
                 </div>
 
                 {/* Raw JSON */}
-                <div className="jwt-json-block">
-                  <button
-                    className="jwt-copy-btn"
-                    onClick={() => handleCopy(JSON.stringify(analysis.payload, null, 2), 'payload')}
-                  >
-                    {copied === 'payload' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                  </button>
-                  <pre>{JSON.stringify(analysis.payload, null, 2)}</pre>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Timeline Section */}
-          <div className="jwt-section">
-            <button
-              className="jwt-section-header"
-              onClick={() => toggleSection('timeline')}
-            >
-              {expandedSections.has('timeline') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-              <Clock className="w-4 h-4" />
-              <span>Timeline</span>
-            </button>
-
-            {expandedSections.has('timeline') && (
-              <div className="jwt-timeline">
-                {analysis.timeline.issuedAt && (
-                  <div className="jwt-timeline-item jwt-timeline-iat">
-                    <div className="jwt-timeline-dot" />
-                    <div className="jwt-timeline-content">
-                      <span className="jwt-timeline-label">Issued</span>
-                      <span className="jwt-timeline-value">{analysis.timeline.issuedAt.label}</span>
-                      <span className="jwt-timeline-relative">{analysis.timeline.issuedAt.relative}</span>
-                    </div>
-                  </div>
-                )}
-
-                {analysis.timeline.notBefore && (
-                  <div className="jwt-timeline-item jwt-timeline-nbf">
-                    <div className="jwt-timeline-dot" />
-                    <div className="jwt-timeline-content">
-                      <span className="jwt-timeline-label">Valid From</span>
-                      <span className="jwt-timeline-value">{analysis.timeline.notBefore.label}</span>
-                      <span className="jwt-timeline-relative">{analysis.timeline.notBefore.relative}</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="jwt-timeline-item jwt-timeline-now">
-                  <div className="jwt-timeline-dot jwt-timeline-dot-now" />
-                  <div className="jwt-timeline-content">
-                    <span className="jwt-timeline-label">Now</span>
-                    <span className="jwt-timeline-value">{analysis.timeline.currentTime.label}</span>
-                  </div>
-                </div>
-
-                {analysis.timeline.expiresAt && (
-                  <div className={`jwt-timeline-item jwt-timeline-exp ${analysis.timeline.status === 'expired' ? 'expired' : ''}`}>
-                    <div className="jwt-timeline-dot" />
-                    <div className="jwt-timeline-content">
-                      <span className="jwt-timeline-label">Expires</span>
-                      <span className="jwt-timeline-value">{analysis.timeline.expiresAt.label}</span>
-                      <span className="jwt-timeline-relative">{analysis.timeline.expiresAt.relative}</span>
-                    </div>
-                  </div>
-                )}
-
-                {analysis.timeline.totalLifetime && (
-                  <div className="jwt-timeline-summary">
-                    <span>Total lifetime: {analysis.timeline.totalLifetime}</span>
-                    {analysis.timeline.status === 'valid' && analysis.timeline.remainingTime && (
-                      <span>Remaining: {analysis.timeline.remainingTime}</span>
-                    )}
-                  </div>
-                )}
+                <pre className="json-output">{JSON.stringify(analysis.payload, null, 2)}</pre>
               </div>
             )}
           </div>
 
-          {/* Signature Section */}
-          <div className="jwt-section jwt-signature-section">
-            <div className="jwt-section-header">
-              <Shield className="w-4 h-4" />
-              <span>Signature</span>
-              <span className="jwt-size">{analysis.size.signature} chars</span>
+          {/* Timeline */}
+          <div className="output-zone">
+            <button className="zone-header clickable" onClick={() => toggleSection('timeline')} type="button">
+              <div className="zone-title">
+                {expandedSections.has('timeline') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                <span className="zone-label">TIMELINE</span>
+              </div>
+            </button>
+            {expandedSections.has('timeline') && (
+              <div className="zone-output">
+                <div className="jwt-timeline">
+                  {analysis.timeline.issuedAt && (
+                    <div className="jwt-timeline-item">
+                      <div className="jwt-timeline-dot" />
+                      <div className="jwt-timeline-content">
+                        <span className="jwt-timeline-label">Issued</span>
+                        <span className="jwt-timeline-value">{analysis.timeline.issuedAt.label}</span>
+                        <span className="jwt-timeline-relative">{analysis.timeline.issuedAt.relative}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {analysis.timeline.notBefore && (
+                    <div className="jwt-timeline-item">
+                      <div className="jwt-timeline-dot" />
+                      <div className="jwt-timeline-content">
+                        <span className="jwt-timeline-label">Valid From</span>
+                        <span className="jwt-timeline-value">{analysis.timeline.notBefore.label}</span>
+                        <span className="jwt-timeline-relative">{analysis.timeline.notBefore.relative}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="jwt-timeline-item jwt-timeline-now">
+                    <div className="jwt-timeline-dot active" />
+                    <div className="jwt-timeline-content">
+                      <span className="jwt-timeline-label">Now</span>
+                      <span className="jwt-timeline-value">{analysis.timeline.currentTime.label}</span>
+                    </div>
+                  </div>
+
+                  {analysis.timeline.expiresAt && (
+                    <div className={`jwt-timeline-item ${analysis.timeline.status === 'expired' ? 'expired' : ''}`}>
+                      <div className="jwt-timeline-dot" />
+                      <div className="jwt-timeline-content">
+                        <span className="jwt-timeline-label">Expires</span>
+                        <span className="jwt-timeline-value">{analysis.timeline.expiresAt.label}</span>
+                        <span className="jwt-timeline-relative">{analysis.timeline.expiresAt.relative}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {analysis.timeline.totalLifetime && (
+                    <div className="jwt-timeline-summary">
+                      <span>Total lifetime: {analysis.timeline.totalLifetime}</span>
+                      {analysis.timeline.status === 'valid' && analysis.timeline.remainingTime && (
+                        <span>Remaining: {analysis.timeline.remainingTime}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Signature */}
+          <div className="output-zone">
+            <div className="zone-header">
+              <div className="zone-title">
+                <span className="zone-label">SIGNATURE</span>
+                <span className="auto-badge">{analysis.size.signature} chars</span>
+              </div>
             </div>
-            <div className="jwt-signature-note">
-              <Info className="w-4 h-4" />
-              <span>
-                Signature verification requires the secret key.
-                Algorithm: <strong>{String(analysis.header.alg || 'unknown')}</strong>
-              </span>
+            <div className="zone-output">
+              <div className="jwt-signature-note">
+                <Info className="w-4 h-4" />
+                <span>
+                  Signature verification requires the secret key.
+                  Algorithm: <strong>{String(analysis.header.alg || 'unknown')}</strong>
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Empty State */}
       {!analysis && !error && (
-        <div className="jwt-empty">
-          <KeyRound className="w-12 h-12" />
-          <h3>Decode JWT Token</h3>
-          <p>Paste a JSON Web Token above to decode and analyze it.</p>
-          <div className="jwt-features">
-            <div className="jwt-feature">
-              <ShieldCheck className="w-5 h-5" />
-              <span>Security Analysis</span>
+        <div className="output-zone">
+          <div className="zone-header">
+            <div className="zone-title">
+              <span className="zone-label">OUTPUT</span>
             </div>
-            <div className="jwt-feature">
-              <Clock className="w-5 h-5" />
-              <span>Expiration Timeline</span>
-            </div>
-            <div className="jwt-feature">
-              <Hash className="w-5 h-5" />
-              <span>Claims Breakdown</span>
-            </div>
+          </div>
+          <div className="zone-output">
+            <span className="output-placeholder">Paste a JWT token above to decode and analyze it...</span>
           </div>
         </div>
       )}
