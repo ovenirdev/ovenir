@@ -19,8 +19,10 @@ jobs:
             cd ~/apps/ovenir
             git fetch origin main
             git reset --hard origin/main
-            docker compose down || true
+            docker compose down --remove-orphans || true
+            docker stop ovenir-web ovenir-caddy || true
+            docker rm ovenir-web ovenir-caddy || true
             docker builder prune -af || true
             docker compose build --no-cache --pull
             docker compose up -d
-            docker image prune -f
+            docker image prune -af
