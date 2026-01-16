@@ -26,4 +26,6 @@ jobs:
             docker compose build --no-cache --pull
             docker compose up -d
             docker image prune -f
+            sleep 5
             docker compose ps
+            docker compose logs web --tail 50
