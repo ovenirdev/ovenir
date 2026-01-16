@@ -889,6 +889,18 @@ body {
   flex-direction: column;
   padding: var(--space-6);
   padding-top: var(--space-4);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .tool-header {
@@ -6825,17 +6837,20 @@ body {
   flex-direction: column;
 }
 
-.diff-split-inputs .zone-textarea {
-  min-height: 200px;
-  max-height: 400px;
-  overflow-y: auto;
-  resize: vertical;
+/* Diff tool textareas - larger fixed height */
+.diff-textarea {
+  min-height: 220px !important;
+  height: 220px !important;
+  max-height: 450px !important;
+  overflow-y: auto !important;
+  resize: vertical !important;
 }
 
 @media (min-width: 1024px) {
-  .diff-split-inputs .zone-textarea {
-    min-height: 280px;
-    max-height: 500px;
+  .diff-textarea {
+    min-height: 300px !important;
+    height: 300px !important;
+    max-height: 550px !important;
   }
 }
 
@@ -6844,9 +6859,10 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .diff-split-inputs .zone-textarea {
-    min-height: 150px;
-    max-height: 300px;
+  .diff-textarea {
+    min-height: 180px !important;
+    height: 180px !important;
+    max-height: 350px !important;
   }
 }
 

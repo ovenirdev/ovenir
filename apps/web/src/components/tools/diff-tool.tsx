@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { autoResizeTextarea } from '@/hooks/useAutoResize';
+import { useState, useCallback, useEffect } from 'react';
 import {
   Copy, Check, AlertTriangle, Columns, AlignLeft,
   Plus, Minus, Equal, Zap
@@ -39,16 +38,6 @@ export function DiffTool({ initialMode }: DiffToolProps) {
   const [result, setResult] = useState<DiffResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const originalRef = useRef<HTMLTextAreaElement>(null);
-  const modifiedRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    autoResizeTextarea(originalRef.current, 3, 12);
-  }, [original]);
-
-  useEffect(() => {
-    autoResizeTextarea(modifiedRef.current, 3, 12);
-  }, [modified]);
 
   const processDiff = useCallback(async () => {
     if (!original && !modified) {
@@ -154,11 +143,10 @@ export function DiffTool({ initialMode }: DiffToolProps) {
               </div>
             </div>
             <textarea
-              ref={originalRef}
               value={original}
               onChange={(e) => setOriginal(e.target.value)}
               placeholder="Paste original text here..."
-              className="zone-textarea"
+              className="zone-textarea diff-textarea"
               spellCheck={false}
             />
           </div>
@@ -176,11 +164,10 @@ export function DiffTool({ initialMode }: DiffToolProps) {
               </div>
             </div>
             <textarea
-              ref={modifiedRef}
               value={modified}
               onChange={(e) => setModified(e.target.value)}
               placeholder="Paste modified text here..."
-              className="zone-textarea"
+              className="zone-textarea diff-textarea"
               spellCheck={false}
             />
           </div>
@@ -197,11 +184,10 @@ export function DiffTool({ initialMode }: DiffToolProps) {
               </div>
             </div>
             <textarea
-              ref={originalRef}
               value={original}
               onChange={(e) => setOriginal(e.target.value)}
               placeholder="Paste original text here..."
-              className="zone-textarea"
+              className="zone-textarea diff-textarea"
               spellCheck={false}
             />
           </div>
@@ -213,11 +199,10 @@ export function DiffTool({ initialMode }: DiffToolProps) {
               </div>
             </div>
             <textarea
-              ref={modifiedRef}
               value={modified}
               onChange={(e) => setModified(e.target.value)}
               placeholder="Paste modified text here..."
-              className="zone-textarea"
+              className="zone-textarea diff-textarea"
               spellCheck={false}
             />
           </div>

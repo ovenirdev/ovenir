@@ -61,7 +61,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {/* Global Background */}
+        <div className="bg-wrap">
+          <div className="bg-base" />
+          <div className="bg-orb bg-orb-1" />
+          <div className="bg-orb bg-orb-2" />
+          <div className="bg-orb bg-orb-3" />
+          <div className="bg-orb bg-orb-4" />
+          <div className="bg-mesh" />
+          <div className="bg-noise" />
+        </div>
+        {children}
+      </body>
     </html>
   );
 }
