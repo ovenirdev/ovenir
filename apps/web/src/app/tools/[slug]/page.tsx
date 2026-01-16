@@ -12,16 +12,30 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const config = getToolConfig(slug);
-  
-  if (!config) return { title: 'Tool Not Found' };
+  const tool = getToolById(slug);
+
+  if (!config || !tool) return { title: 'Tool Not Found' };
+
+  const fullDescription = `${config.description}. Free online tool, 100% local, no data sent to servers. Part of OVENIR developer toolbox.`;
+  const keywords = tool.meta.tags || [];
 
   return {
-    title: `${config.name} - OVENIR`,
-    description: config.description,
+    title: config.name,
+    description: fullDescription,
+    keywords: [...keywords, 'developer tool', 'free', 'online', 'privacy'],
     openGraph: {
       title: `${config.name} - OVENIR`,
       description: config.description,
       type: 'website',
+      url: `/tools/${slug}`,
+    },
+    twitter: {
+      card: 'summary',
+      title: `${config.name} - OVENIR`,
+      description: config.description,
+    },
+    alternates: {
+      canonical: `/tools/${slug}`,
     },
   };
 }

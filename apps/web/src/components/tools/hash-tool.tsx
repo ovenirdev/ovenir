@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { autoResizeTextarea } from '@/hooks/useAutoResize';
 import {
   Hash, Copy, Check, Shield, ShieldCheck, ShieldX, AlertTriangle,
   Zap, RefreshCw
@@ -45,6 +46,11 @@ export function HashTool({ slug, initialInput, initialMode }: HashToolProps) {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [uppercase, setUppercase] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    autoResizeTextarea(textareaRef.current, 3, 12);
+  }, [input]);
 
   const processHash = useCallback(async () => {
     if (!input.trim()) {
@@ -127,49 +133,51 @@ export function HashTool({ slug, initialInput, initialMode }: HashToolProps) {
         </div>
       </div>
 
-      {/* Input Zone */}
-      <div className={`input-zone ${error ? 'has-error' : ''}`}>
-        <div className="zone-header">
-          <div className="zone-title">
-            <span className="zone-label">INPUT</span>
-            {input && (
-              <span className="auto-badge">
-                <Zap className="w-3 h-3" />
-                {new TextEncoder().encode(input).length} bytes
-              </span>
-            )}
-          </div>
-        </div>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter text to hash..."
-          className="zone-textarea"
-          spellCheck={false}
-        />
-      </div>
-
-      {/* Compare Hash Input (Compare mode only) */}
-      {mode === 'compare' && (
-        <div className="input-zone">
+      {/* Zones Container */}
+      <div className="tool-zones">
+        {/* Input Zone */}
+        <div className={`input-zone ${error ? 'has-error' : ''}`}>
           <div className="zone-header">
             <div className="zone-title">
-              <span className="zone-label">EXPECTED HASH</span>
+              <span className="zone-label">INPUT</span>
+              {input && (
+                <span className="auto-badge">
+                  <Zap className="w-3 h-3" />
+                  {new TextEncoder().encode(input).length} bytes
+                </span>
+              )}
             </div>
           </div>
-          <input
-            type="text"
-            value={compareHash}
-            onChange={(e) => setCompareHash(e.target.value)}
-            placeholder="Paste hash to compare..."
-            className="zone-input"
+          <textarea
+            ref={textareaRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Enter text to hash..."
+            className="zone-textarea"
             spellCheck={false}
           />
+          {/* Compare Hash Input (Compare mode only) */}
+          {mode === 'compare' && (
+            <div className="zone-compare-input">
+              <div className="zone-header">
+                <div className="zone-title">
+                  <span className="zone-label">EXPECTED HASH</span>
+                </div>
+              </div>
+              <input
+                type="text"
+                value={compareHash}
+                onChange={(e) => setCompareHash(e.target.value)}
+                placeholder="Paste hash to compare..."
+                className="zone-input"
+                spellCheck={false}
+              />
+            </div>
+          )}
         </div>
-      )}
 
-      {/* Output Zone */}
-      <div className={`output-zone ${error ? 'has-error' : ''}`}>
+        {/* Output Zone */}
+        <div className={`output-zone ${error ? 'has-error' : ''}`}>
         <div className="zone-header">
           <div className="zone-title">
             <span className="zone-label">OUTPUT</span>
@@ -260,6 +268,7 @@ export function HashTool({ slug, initialInput, initialMode }: HashToolProps) {
           )}
         </div>
       </div>
+      </div>{/* End tool-zones */}
     </div>
   );
 }

@@ -175,6 +175,8 @@ export function UuidTool({ slug, initialInput, initialMode }: UuidToolProps) {
         )}
       </div>
 
+      {/* Zones Container */}
+      <div className="tool-zones">
       {/* Generate Mode */}
       {mode === 'generate' && (
         <>
@@ -388,6 +390,7 @@ export function UuidTool({ slug, initialInput, initialMode }: UuidToolProps) {
           )}
         </>
       )}
+      </div>{/* End tool-zones */}
     </div>
   );
 }

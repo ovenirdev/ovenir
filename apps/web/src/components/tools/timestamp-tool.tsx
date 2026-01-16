@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { autoResizeTextarea } from '@/hooks/useAutoResize';
 import { useSearchParams, useRouter } from 'next/navigation';
 import {
   Copy, Check, Trash2, Share2,
@@ -51,6 +52,11 @@ export function TimestampTool({ slug, initialInput, initialMode }: TimestampTool
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [nowTimestamp, setNowTimestamp] = useState<number>(Date.now());
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    autoResizeTextarea(textareaRef.current, 2, 8);
+  }, [input]);
 
   // Live "now" timestamp
   useEffect(() => {
@@ -272,39 +278,42 @@ export function TimestampTool({ slug, initialInput, initialMode }: TimestampTool
         </div>
       </div>
 
-      {/* Input Zone */}
-      <div className={`input-zone ${error ? 'has-error' : ''}`}>
-        <div className="zone-header">
-          <div className="zone-title">
-            <span className="zone-label">INPUT</span>
-            {input && !error && (
-              <span className="auto-badge">
-                <Zap className="w-3 h-3" />
-                {output?.inputType}
-              </span>
-            )}
+      {/* Zones Container */}
+      <div className="tool-zones">
+        {/* Input Zone */}
+        <div className={`input-zone ${error ? 'has-error' : ''}`}>
+          <div className="zone-header">
+            <div className="zone-title">
+              <span className="zone-label">INPUT</span>
+              {input && !error && (
+                <span className="auto-badge">
+                  <Zap className="w-3 h-3" />
+                  {output?.inputType}
+                </span>
+              )}
+            </div>
+            <div className="zone-actions">
+              <button className="action-btn" onClick={handleClear} title="Clear" type="button">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-          <div className="zone-actions">
-            <button className="action-btn" onClick={handleClear} title="Clear" type="button">
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
+
+          <textarea
+            ref={textareaRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={mode === 'toDate'
+              ? 'Enter Unix timestamp (e.g., 1704067200) or date string...'
+              : 'Enter a date (e.g., 2024-01-01 or January 1, 2024)...'
+            }
+            className="zone-textarea"
+            spellCheck={false}
+          />
         </div>
 
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={mode === 'toDate'
-            ? 'Enter Unix timestamp (e.g., 1704067200) or date string...'
-            : 'Enter a date (e.g., 2024-01-01 or January 1, 2024)...'
-          }
-          className="zone-textarea"
-          spellCheck={false}
-        />
-      </div>
-
-      {/* Output Zone */}
-      <div className={`output-zone ${error ? 'has-error' : ''}`}>
+        {/* Output Zone */}
+        <div className={`output-zone ${error ? 'has-error' : ''}`}>
         <div className="zone-header">
           <div className="zone-title">
             <span className="zone-label">OUTPUT</span>
@@ -400,6 +409,7 @@ export function TimestampTool({ slug, initialInput, initialMode }: TimestampTool
           )}
         </div>
       </div>
+      </div>{/* End tool-zones */}
     </div>
   );
 }

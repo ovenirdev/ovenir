@@ -179,6 +179,8 @@ export function ColorTool({ slug, initialInput, initialMode }: ColorToolProps) {
         )}
       </div>
 
+      {/* Zones Container */}
+      <div className="tool-zones">
       {/* Convert & Palette Mode Input */}
       {(mode === 'convert' || mode === 'palette') && (
         <div className={`input-zone ${error ? 'has-error' : ''}`}>
@@ -477,6 +479,7 @@ export function ColorTool({ slug, initialInput, initialMode }: ColorToolProps) {
           </div>
         </div>
       )}
+      </div>{/* End tool-zones */}
     </div>
   );
 }

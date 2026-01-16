@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { autoResizeTextarea } from '@/hooks/useAutoResize';
 import {
   KeyRound, Shield, ShieldAlert, ShieldCheck, Clock, AlertTriangle,
   Copy, Check, ChevronDown, ChevronRight, User, Building, Users,
@@ -69,6 +70,11 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     new Set(['header', 'payload', 'security', 'timeline'])
   );
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    autoResizeTextarea(textareaRef.current, 3, 12);
+  }, [input]);
 
   const processJwt = useCallback(async () => {
     if (!input.trim()) {
@@ -123,6 +129,8 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
 
   return (
     <div className="tool-container">
+      {/* Zones Container */}
+      <div className="tool-zones">
       {/* Input */}
       <div className={`input-zone ${error ? 'has-error' : ''}`}>
         <div className="zone-header">
@@ -137,6 +145,7 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
           </div>
         </div>
         <textarea
+          ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
@@ -417,6 +426,7 @@ export function JwtTool({ slug, initialInput, initialMode }: JwtToolProps) {
           </div>
         </div>
       )}
+      </div>{/* End tool-zones */}
     </div>
   );
 }

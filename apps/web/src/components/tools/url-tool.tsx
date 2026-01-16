@@ -6,6 +6,7 @@ import {
   ExternalLink, ChevronRight, Hash, Search, User, Key, Server,
   Layers, Code, AlertTriangle, Zap
 } from 'lucide-react';
+import { useAutoResize } from '@/hooks/useAutoResize';
 
 interface UrlPart {
   key: string;
@@ -62,6 +63,7 @@ export function UrlTool({ slug, initialInput, initialMode }: UrlToolProps) {
   const [result, setResult] = useState<string>('');
   const [error, setError] = useState<{ message: string; suggestion?: string } | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const { ref: textareaRef, resize } = useAutoResize<HTMLTextAreaElement>({ minRows: 2, maxRows: 10 });
 
   const processUrl = useCallback(async () => {
     if (!input.trim()) {
@@ -133,39 +135,42 @@ export function UrlTool({ slug, initialInput, initialMode }: UrlToolProps) {
         </div>
       </div>
 
-      {/* Input */}
-      <div className={`input-zone ${error ? 'has-error' : ''}`}>
-        <div className="zone-header">
-          <div className="zone-title">
-            <span className="zone-label">
-              {mode === 'parse' && 'URL TO PARSE'}
-              {mode === 'encode' && 'TEXT TO ENCODE'}
-              {mode === 'decode' && 'URL TO DECODE'}
-            </span>
-            {input && (
-              <span className="auto-badge">
-                <Zap className="w-3 h-3" />
-                {input.length} chars
+      {/* Zones Container */}
+      <div className="tool-zones">
+        {/* Input */}
+        <div className={`input-zone ${error ? 'has-error' : ''}`}>
+          <div className="zone-header">
+            <div className="zone-title">
+              <span className="zone-label">
+                {mode === 'parse' && 'URL TO PARSE'}
+                {mode === 'encode' && 'TEXT TO ENCODE'}
+                {mode === 'decode' && 'URL TO DECODE'}
               </span>
-            )}
+              {input && (
+                <span className="auto-badge">
+                  <Zap className="w-3 h-3" />
+                  {input.length} chars
+                </span>
+              )}
+            </div>
           </div>
+          <textarea
+            ref={textareaRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={
+              mode === 'parse'
+                ? 'https://example.com/path?query=value&foo=bar#section'
+                : mode === 'encode'
+                ? 'Text with spaces & special chars!'
+                : 'https%3A%2F%2Fexample.com%2Fpath'
+            }
+            className="zone-textarea"
+            spellCheck={false}
+          />
         </div>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={
-            mode === 'parse'
-              ? 'https://example.com/path?query=value&foo=bar#section'
-              : mode === 'encode'
-              ? 'Text with spaces & special chars!'
-              : 'https%3A%2F%2Fexample.com%2Fpath'
-          }
-          className="zone-textarea"
-          spellCheck={false}
-        />
-      </div>
 
-      {/* Error */}
+        {/* Error */}
       {error && (
         <div className="output-zone has-error">
           <div className="zone-header">
@@ -345,6 +350,7 @@ export function UrlTool({ slug, initialInput, initialMode }: UrlToolProps) {
           </div>
         </div>
       )}
+      </div>{/* End tool-zones */}
     </div>
   );
 }

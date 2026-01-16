@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import { autoResizeTextarea } from '@/hooks/useAutoResize';
 import { Regex, Copy, Check, AlertTriangle, CheckCircle, Replace, Zap } from 'lucide-react';
 
 interface RegexMatch {
@@ -48,6 +49,11 @@ export function RegexTool({ slug, initialInput, initialMode }: RegexToolProps) {
   const [error, setError] = useState<string | null>(null);
   const [patternError, setPatternError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    autoResizeTextarea(textareaRef.current, 3, 12);
+  }, [text]);
 
   const flagsString = useMemo(() => {
     return Object.entries(flags).filter(([, v]) => v).map(([k]) => k).join('');
@@ -137,80 +143,84 @@ export function RegexTool({ slug, initialInput, initialMode }: RegexToolProps) {
         </div>
       </div>
 
-      {/* Pattern Input */}
-      <div className={`input-zone ${patternError ? 'has-error' : ''}`}>
-        <div className="zone-header">
-          <div className="zone-title">
-            <span className="zone-label">PATTERN</span>
-          </div>
-          <div className="zone-actions">
-            <select
-              className="pattern-select"
-              onChange={(e) => e.target.value && setPattern(e.target.value)}
-              value=""
-            >
-              <option value="">Common patterns...</option>
-              {COMMON_PATTERNS.map((p) => (
-                <option key={p.name} value={p.pattern}>{p.name}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="pattern-input-wrap">
-          <span className="pattern-delim">/</span>
-          <input
-            type="text"
-            value={pattern}
-            onChange={(e) => setPattern(e.target.value)}
-            placeholder="Enter regex pattern..."
-            className="pattern-input"
-            spellCheck={false}
-          />
-          <span className="pattern-delim">/</span>
-          <span className="pattern-flags">{flagsString}</span>
-        </div>
-        {patternError && <p className="pattern-error">{patternError}</p>}
-      </div>
-
-      {/* Test String */}
-      <div className="input-zone">
-        <div className="zone-header">
-          <div className="zone-title">
-            <span className="zone-label">TEST STRING</span>
-            {text && <span className="auto-badge"><Zap className="w-3 h-3" />{text.length} chars</span>}
-          </div>
-        </div>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Enter text to test against..."
-          className="zone-textarea"
-          spellCheck={false}
-        />
-      </div>
-
-      {/* Replacement (Replace mode) */}
-      {mode === 'replace' && (
+      {/* Zones Container */}
+      <div className="tool-zones">
+        {/* Pattern + Test String Inputs */}
         <div className="input-zone">
+          {/* Pattern Input */}
+          <div className={`regex-pattern-section ${patternError ? 'has-error' : ''}`}>
+            <div className="zone-header">
+              <div className="zone-title">
+                <span className="zone-label">PATTERN</span>
+              </div>
+              <div className="zone-actions">
+                <select
+                  className="pattern-select"
+                  onChange={(e) => e.target.value && setPattern(e.target.value)}
+                  value=""
+                >
+                  <option value="">Common patterns...</option>
+                  {COMMON_PATTERNS.map((p) => (
+                    <option key={p.name} value={p.pattern}>{p.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="pattern-input-wrap">
+              <span className="pattern-delim">/</span>
+              <input
+                type="text"
+                value={pattern}
+                onChange={(e) => setPattern(e.target.value)}
+                placeholder="Enter regex pattern..."
+                className="pattern-input"
+                spellCheck={false}
+              />
+              <span className="pattern-delim">/</span>
+              <span className="pattern-flags">{flagsString}</span>
+            </div>
+            {patternError && <p className="pattern-error">{patternError}</p>}
+          </div>
+
+          {/* Test String */}
           <div className="zone-header">
             <div className="zone-title">
-              <span className="zone-label">REPLACEMENT</span>
-              <span className="zone-hint">$1, $2... for groups, $& for match</span>
+              <span className="zone-label">TEST STRING</span>
+              {text && <span className="auto-badge"><Zap className="w-3 h-3" />{text.length} chars</span>}
             </div>
           </div>
-          <input
-            type="text"
-            value={replacement}
-            onChange={(e) => setReplacement(e.target.value)}
-            placeholder="Replacement string..."
-            className="zone-input"
+          <textarea
+            ref={textareaRef}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Enter text to test against..."
+            className="zone-textarea"
             spellCheck={false}
           />
-        </div>
-      )}
 
-      {/* Output */}
-      <div className={`output-zone ${error ? 'has-error' : ''}`}>
+          {/* Replacement (Replace mode) */}
+          {mode === 'replace' && (
+            <div className="regex-replacement-section">
+              <div className="zone-header">
+                <div className="zone-title">
+                  <span className="zone-label">REPLACEMENT</span>
+                  <span className="zone-hint">$1, $2... for groups, $& for match</span>
+                </div>
+              </div>
+              <input
+                type="text"
+                value={replacement}
+                onChange={(e) => setReplacement(e.target.value)}
+                placeholder="Replacement string..."
+                className="zone-input"
+                spellCheck={false}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Output */}
+        <div className={`output-zone ${error ? 'has-error' : ''}`}>
         <div className="zone-header">
           <div className="zone-title">
             <span className="zone-label">OUTPUT</span>
@@ -274,6 +284,7 @@ export function RegexTool({ slug, initialInput, initialMode }: RegexToolProps) {
           )}
         </div>
       </div>
+      </div>{/* End tool-zones */}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
   Binary, Link as LinkIcon, Mail, FileText,
   Code, Image as ImageIcon,
 } from 'lucide-react';
+import { autoResizeTextarea } from '@/hooks/useAutoResize';
 
 interface Base64ToolProps {
   slug: string;
@@ -198,6 +199,11 @@ export function Base64Tool({ slug, initialInput, initialMode }: Base64ToolProps)
     return () => clearTimeout(timer);
   }, [input, mode, options]);
 
+  // Auto-resize textarea
+  useEffect(() => {
+    autoResizeTextarea(textareaRef.current, 3, 12);
+  }, [input]);
+
   // Handlers
   const handleCopy = useCallback(async (text: string, type: string) => {
     await navigator.clipboard.writeText(text);
@@ -337,6 +343,8 @@ export function Base64Tool({ slug, initialInput, initialMode }: Base64ToolProps)
         </div>
       </div>
 
+      {/* Zones Container */}
+      <div className="tool-zones">
       {/* Input Zone */}
       <div
         ref={dropZoneRef}
@@ -514,6 +522,7 @@ export function Base64Tool({ slug, initialInput, initialMode }: Base64ToolProps)
           </div>
         )}
       </div>
+      </div>{/* End tool-zones */}
 
       {/* Options Panel */}
       <details className="options-panel">

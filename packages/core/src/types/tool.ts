@@ -11,7 +11,11 @@ export type ToolCategory =
   | 'time'
   | 'dev'
   | 'network'
-  | 'image';
+  | 'image'
+  | 'data'
+  | 'web'
+  | 'security'
+  | 'id';
 
 /**
  * Tool metadata - displayed in UI and used for SEO

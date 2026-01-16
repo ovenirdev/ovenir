@@ -10,6 +10,7 @@
     }
   },
   "dependencies": {
-    "@ovenir/core": "workspace:*"
+    "@ovenir/core": "workspace:*",
+    "qrcode-generator": "^2.0.4"
   }
 }

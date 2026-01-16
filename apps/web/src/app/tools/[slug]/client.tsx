@@ -11,6 +11,19 @@ import { HashTool } from '@/components/tools/hash-tool';
 import { UuidTool } from '@/components/tools/uuid-tool';
 import { RegexTool } from '@/components/tools/regex-tool';
 import { ColorTool } from '@/components/tools/color-tool';
+import { DiffTool } from '@/components/tools/diff-tool';
+import { MarkdownTool } from '@/components/tools/markdown-tool';
+import { PasswordTool } from '@/components/tools/password-tool';
+import { BaseConverterTool } from '@/components/tools/base-converter-tool';
+import { LoremTool } from '@/components/tools/lorem-tool';
+import { YamlTool } from '@/components/tools/yaml-tool';
+import { CronTool } from '@/components/tools/cron-tool';
+import { SqlTool } from '@/components/tools/sql-tool';
+import { QrCodeTool } from '@/components/tools/qrcode-tool';
+import { CaseTool } from '@/components/tools/case-tool';
+import { HtmlTool } from '@/components/tools/html-tool';
+import { SlugTool } from '@/components/tools/slug-tool';
+import { XmlTool } from '@/components/tools/xml-tool';
 
 interface ToolConfig {
   name: string;
@@ -45,6 +58,19 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType<ToolComponentProps>> =
   uuid: UuidTool,
   regex: RegexTool,
   color: ColorTool,
+  diff: DiffTool,
+  markdown: MarkdownTool,
+  password: PasswordTool,
+  'base-converter': BaseConverterTool,
+  lorem: LoremTool,
+  yaml: YamlTool,
+  cron: CronTool,
+  sql: SqlTool,
+  qrcode: QrCodeTool,
+  case: CaseTool,
+  html: HtmlTool,
+  slug: SlugTool,
+  xml: XmlTool,
 };
 
 export function ToolPageClient({ slug, config, relatedTools, initialInput, initialMode }: ToolPageClientProps) {

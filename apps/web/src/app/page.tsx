@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { detectFormat, type DetectionResult } from '@ovenir/core';
 import {
-  Braces, Binary, KeyRound, Link, Hash, Fingerprint, Clock, Palette,
+  Braces, Binary, KeyRound, Link, Link2, Hash, Fingerprint, Clock, Palette,
   Search, GitCompare, FileJson, FileText, Code, Database,
   AlignLeft, QrCode, KeySquare, CalendarClock, Sparkles, Github,
   ArrowRight, Wand2, FileCode, Zap, LayoutGrid, Lock, Globe, Type,
@@ -18,7 +18,7 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   uuid: Fingerprint, timestamp: Clock, color: Palette, regex: Search,
   diff: GitCompare, yaml: FileJson, xml: FileCode, markdown: FileText,
   html: Code, sql: Database, lorem: AlignLeft, qrcode: QrCode,
-  password: KeySquare, cron: CalendarClock,
+  password: KeySquare, cron: CalendarClock, slug: Link2,
 };
 
 const QUICK_TOOLS = [
@@ -49,6 +49,7 @@ const TOOLS = [
   { id: 'qrcode', name: 'QR Code', desc: 'Generate QR codes from text', cat: 'encoding', size: 'sm' },
   { id: 'password', name: 'Password Gen', desc: 'Generate secure passwords', cat: 'crypto', size: 'sm' },
   { id: 'cron', name: 'Cron Parser', desc: 'Parse cron expressions', cat: 'time', size: 'sm' },
+  { id: 'slug', name: 'Slug Generator', desc: 'Generate URL-friendly slugs', cat: 'text', size: 'sm' },
 ];
 
 const CATEGORIES = [
