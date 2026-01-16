@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Sparkles, Github, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Sparkles } from 'lucide-react';
 import { Base64Tool } from '@/components/tools/base64-tool';
 import { TimestampTool } from '@/components/tools/timestamp-tool';
 import { JsonTool } from '@/components/tools/json-tool';
@@ -114,17 +114,6 @@ export function ToolPageClient({ slug, config, initialInput, initialMode }: Tool
               </div>
               <span>OVENIR</span>
             </div>
-
-            <a
-              href={`https://github.com/ovenirdev/ovenir/tree/main/packages/tools/${slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="source-link"
-            >
-              <Github className="w-4 h-4" />
-              <span>Source</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
           </header>
 
           {/* Tool Info */}

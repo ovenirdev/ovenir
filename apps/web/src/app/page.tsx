@@ -6,7 +6,7 @@ import { detectFormat, type DetectionResult } from '@ovenir/core';
 import {
   Braces, Binary, KeyRound, Link, Link2, Hash, Fingerprint, Clock, Palette,
   Search, GitCompare, FileJson, FileText, Code, Database,
-  AlignLeft, QrCode, KeySquare, CalendarClock, Sparkles, Github,
+  AlignLeft, QrCode, KeySquare, CalendarClock, Sparkles,
   ArrowRight, Wand2, FileCode, Zap, LayoutGrid, Lock, Globe, Type,
   Star, Eye, Scan
 } from 'lucide-react';
@@ -258,9 +258,6 @@ export default function Home() {
               </div>
               <span className="brand-name">OVENIR</span>
               <span className="brand-tag">Beta</span>
-              <a href="https://github.com/ovenirdev/ovenir" target="_blank" rel="noopener noreferrer" className="brand-gh">
-                <Github className="w-4 h-4" />
-              </a>
             </header>
 
             {/* Hero */}
