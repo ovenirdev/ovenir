@@ -6820,9 +6820,33 @@ body {
   gap: var(--space-4);
 }
 
+.diff-split-inputs .input-zone {
+  display: flex;
+  flex-direction: column;
+}
+
+.diff-split-inputs .zone-textarea {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  resize: vertical;
+}
+
+@media (min-width: 1024px) {
+  .diff-split-inputs .zone-textarea {
+    min-height: 280px;
+    max-height: 500px;
+  }
+}
+
 @media (max-width: 768px) {
   .diff-split-inputs {
     grid-template-columns: 1fr;
+  }
+
+  .diff-split-inputs .zone-textarea {
+    min-height: 150px;
+    max-height: 300px;
   }
 }
 
@@ -7530,4 +7554,39 @@ body {
 .not-found-link:hover {
   background: var(--color-accent-hover);
   transform: translateY(-1px);
+}
+
+/* ============================================
+   SKELETON LOADING
+   ============================================ */
+
+.skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    var(--glass-bg) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    var(--glass-bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+[data-theme="dark"] .skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 200% 100%;
 }
